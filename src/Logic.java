@@ -2,11 +2,8 @@ import java.io.*;
 import java.util.*;
 import java.lang.Math;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.lang.Math;
 import java.util.concurrent.TimeUnit;
 
 import com.alibaba.fastjson.*;
@@ -35,20 +32,6 @@ public class Logic {
         this.board = new String[boardSize][boardSize];
         initBoard();
 
-//        int n = 2;
-//        int m = 2;
-//        //初始化数组
-//        String[][] Tic_Tac_Toe = new String[n][n];
-//        for (int i = 0; i < n; i++){
-//            for (int j = 0; j < n; j++){
-//                Tic_Tac_Toe[i][j] = "";
-//            }
-//        }
-
-//        boolean is_player = false;
-//        boolean is_ai = true;
-//        String player = "O";
-//        String ai = "X";
         is_player_win = false;
         is_ai_win = false;
         this.map = new HashMap<String, Integer>();
@@ -58,25 +41,6 @@ public class Logic {
         ai_move_row = 0;
         ai_move_colmn = 0;
         start();
-//        while (!check(Tic_Tac_Toe, n, m) && !check_full(Tic_Tac_Toe, n)){
-//            if (is_ai == true){
-//                best_move(Tic_Tac_Toe, n, m, map);
-////                ai_move_row = i;
-////                ai_move_colmn = j;
-//                System.out.println(ai_move_row);
-//                System.out.println(ai_move_colmn);
-//
-//
-//
-//                is_ai = false;
-//                is_player = true;
-//                //需要把选择的位置传出
-//            }else{
-//                human(Tic_Tac_Toe, n);
-//                is_player = false;
-//                is_ai = true;
-//            }
-//        }
 
         if (is_player_win == true){
             System.out.println("player win");
@@ -192,7 +156,7 @@ public class Logic {
                 System.out.println("INFO: Turn " + Integer.toString(this.turn));
                 System.out.println("Opponent move = " + "(" + temp[1] + ", " + temp[2] + ")");
                 this.updateBoard(Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), temp[0]);
-                //printBoard();
+
             } else {
                 // If it's our turn, think and make move
                 best_move(this.board, this.boardSize, this.target, map);
