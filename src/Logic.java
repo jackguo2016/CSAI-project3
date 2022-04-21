@@ -2,8 +2,11 @@ import java.io.*;
 import java.util.*;
 import java.lang.Math;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.lang.Math;
 import java.util.concurrent.TimeUnit;
 
 import com.alibaba.fastjson.*;
@@ -16,10 +19,10 @@ public class Logic {
     private int boardSize;
     private String[][] board;
     private int target;
-    private int TEAM_ID = 1291;
+    private int TEAM_ID = 1296;
     private int turn;
-    static boolean is_player_win;
-    static boolean is_ai_win;
+    private boolean is_player_win;
+    private boolean is_ai_win;
     static int ai_move_row;
     static int ai_move_colmn;
     public Logic(int gameId, int boardSize, int target, String selfSymbol, String oppoSymbol) throws Exception {
@@ -32,8 +35,22 @@ public class Logic {
         this.board = new String[boardSize][boardSize];
         initBoard();
 
-        is_player_win = false;
-        is_ai_win = false;
+//        int n = 2;
+//        int m = 2;
+//        //初始化数组
+//        String[][] Tic_Tac_Toe = new String[n][n];
+//        for (int i = 0; i < n; i++){
+//            for (int j = 0; j < n; j++){
+//                Tic_Tac_Toe[i][j] = "";
+//            }
+//        }
+
+//        boolean is_player = false;
+//        boolean is_ai = true;
+//        String player = "O";
+//        String ai = "X";
+        this.is_player_win = false;
+        this.is_ai_win = false;
         this.map = new HashMap<String, Integer>();
         map.put("ai_win", 10);
         map.put("player_win", -10);
@@ -41,15 +58,34 @@ public class Logic {
         ai_move_row = 0;
         ai_move_colmn = 0;
         start();
+//        while (!check(Tic_Tac_Toe, n, m) && !check_full(Tic_Tac_Toe, n)){
+//            if (is_ai == true){
+//                best_move(Tic_Tac_Toe, n, m, map);
+////                ai_move_row = i;
+////                ai_move_colmn = j;
+//                System.out.println(ai_move_row);
+//                System.out.println(ai_move_colmn);
+//
+//
+//
+//                is_ai = false;
+//                is_player = true;
+//                //需要把选择的位置传出
+//            }else{
+//                human(Tic_Tac_Toe, n);
+//                is_player = false;
+//                is_ai = true;
+//            }
+//        }
 
-        if (is_player_win == true){
-            System.out.println("player win");
-        }
-        else if (is_ai_win == true){
-            System.out.println("ai win");
-        }else{
-            System.out.println("tie");
-        }
+//        if (is_player_win == true){
+//            System.out.println("player win");
+//        }
+//        else if (is_ai_win == true){
+//            System.out.println("ai win");
+//        }else{
+//            System.out.println("tie");
+//        }
 
     }
 
@@ -73,7 +109,11 @@ public class Logic {
             this.turn = 1;
             return;
         }
-
+        for (int i = 0; i < this.boardSize; i++){
+            for (int j = 0; j < this.boardSize; j++){
+                this.board[i][j] = "";
+            }
+        }
         JSONObject output = JSON.parseObject(outputString);
         int count = 1;
         for (Entry<String, Object> e : output.entrySet()) {
@@ -87,7 +127,7 @@ public class Logic {
     }
 
     public void human(String[][] Tic_Tac_Toe, int n){
-        for (int i = 0; i < n; i++){
+            for (int i = 0; i < n; i++){
             for (int j = 0; j < n; j++){
                 if (Tic_Tac_Toe[i][j] == ""){
                     Tic_Tac_Toe[i][j] = this.oppoSymbol;
@@ -156,12 +196,21 @@ public class Logic {
                 System.out.println("INFO: Turn " + Integer.toString(this.turn));
                 System.out.println("Opponent move = " + "(" + temp[1] + ", " + temp[2] + ")");
                 this.updateBoard(Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), temp[0]);
-
+                //printBoard();
             } else {
                 // If it's our turn, think and make move
+                System.out.println("make a move");
                 best_move(this.board, this.boardSize, this.target, map);
             }
             this.turn += 1;
+        }
+        if (this.is_player_win == true){
+            System.out.println("player win");
+        }
+        else if (this.is_ai_win == true){
+            System.out.println("ai win");
+        }else{
+            System.out.println("tie");
         }
     }
 
@@ -173,6 +222,7 @@ public class Logic {
         params.put("gameId", Integer.toString(this.gameid));
         params.put("move", move);
         String result = this.requests.post(params);
+        System.out.println("Make move: " + x + " " + y);
 
         JSONObject parsedResult = JSON.parseObject(result);
         if (!parsedResult.getString("code").contains("OK")) {
@@ -223,7 +273,7 @@ public class Logic {
             return max;
         }
     }
-    public boolean check_full(String[][] Tic_Tac_Toe, int n){
+    public static boolean check_full(String[][] Tic_Tac_Toe, int n){
         for (int i = 0; i < n; i++){
             for (int j = 0; j < n; j++){
                 if (Tic_Tac_Toe[i][j] == ""){
